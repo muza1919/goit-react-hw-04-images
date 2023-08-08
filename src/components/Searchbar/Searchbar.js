@@ -1,56 +1,52 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import { BiSearchAlt2 } from 'react-icons/bi';
 
-export class Searchbar extends Component {
-  state = {
-    value: '',
+export const Searchbar = ({ onSearch }) => {
+  const [value, setValue] = useState('');
+
+  const handleChange = ({ target: { value } }) => {
+    setValue(value);
   };
 
-  handleChange = ({ target: { value } }) => {
-    this.setState({ value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (!this.state.value) {
+    if (!value) {
       toast.error('Please, enter some keywords!');
       return;
     }
 
-    this.props.onSearch(this.state.value);
-    this.setState({ value: '' });
+    onSearch(value);
+    setValue('');
   };
 
-  render() {
-    return (
-      <div className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <input
-            className="SearchForm-input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-          <button
-            className="SearchForm-button SearchForm-button-label"
-            type="submit"
-          >
-            <span>
-              <BiSearchAlt2 className="SearchForm-button-label" />
-            </span>
-          </button>
-        </form>
-        <ToastContainer autoClose={2000} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="Searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <input
+          className="SearchForm-input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={value}
+          onChange={handleChange}
+        />
+        <button
+          className="SearchForm-button SearchForm-button-label"
+          type="submit"
+        >
+          <span>
+            <BiSearchAlt2 className="SearchForm-button-label" />
+          </span>
+        </button>
+      </form>
+      <ToastContainer autoClose={2000} />
+    </div>
+  );
+};
 
 Searchbar.propTypes = {
   onSearch: PropTypes.func.isRequired,
